@@ -1,0 +1,22 @@
+function migraciones(offset) {
+res = [];
+$('.cluster-container').map((h,y) => 
+$(y).find('itinerary').map(function(p,q){ 
+res.push([
+	't' + (res.length+offset) + ' = Trip(fromPort=' + $(y).find('airport-item span')[0].textContent.trim(),
+	'toPort=' + $(y).find('airport-item span')[1].textContent.trim(),
+	'cost=' + parseInt($(y).find('.price-amount')[$(y).find('.price-amount').length -1].textContent.replace('.','')),
+	"currency=\'ARS\'",
+	'departure=datetime.fromtimestamp(' + ((x = new Date('2019-1-' + $(y).find('.route-type-date')[0].textContent.trim().split(' ')[1] + 'T' + $(q).find('.hour')[0].textContent + ':00Z').getTime())/1000) + ')',
+	'arrival=datetime.fromtimestamp(' + (new Date(new Date(new Date(x).setDate(new Date(x).getDate() + ($(q).find('.days-difference').length === 0 ? 0 : parseInt($(q).find('.days-difference')[0].textContent.replace('+',''))))).setHours(parseInt($(q).find('.hour')[$(q).find('.hour').length - 1].textContent.trim().split(':')[0])-3)).setMinutes($(q).find('.hour')[$(q).find('.hour').length - 1].textContent.trim().split(':')[1]) /1000) + ')',
+	'duration=timedelta(seconds=' + ((dur = $(q).find('duration-item')[0].textContent.trim().replace('h ',':').replace('h',':0').replace('m','').trim().split(':')).length === 1 ? parseInt(dur[0])*60 : parseInt(dur[0])*60*60 + parseInt(dur[1])*60) + ')',
+	'scales=' + ($(q).find('.stops-text')[0].textContent.trim().split(' ').length === 1 ? 0 : $(q).find('.stops-text')[0].textContent.trim().split(' ')[0]),
+	'sourceURL=\'www.despegar.com.ar\')'
+].toString())	
+}));
+total = '';
+res.forEach(w => total += w + '\n' + w.split('=')[0].trim() + '.save()\n');
+localStorage.setItem('number',res.length+offset)
+return total;
+};
+migraciones(parseInt(localStorage.getItem('number')))

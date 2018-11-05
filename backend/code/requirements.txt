@@ -1,6 +1,6 @@
 Django
 djangorestframework
-mysql-connector
+mysqlclient
 matplotlib
 numpy
 networkx
