@@ -2,11 +2,30 @@
   <mat-card>
     <mat-card-title>Filters</mat-card-title>
     <mat-card-content>
-        <input [(ngModel)]="tourRequest.src" placeholder="Source">
-        <input [(ngModel)]="toVisit" placeholder="To Visit places">
-        <input [(ngModel)]="tourRequest.vacationDays" placeholder="Source">
-        <input placeholder="Date">
-        <button mat-raised-button color="primary" (click)="buscar()">Aplicar</button>
+      <mat-form-field class="field">
+        <mat-label>Choose a place to start the tour</mat-label>
+        <input matInput [(ngModel)]="tourRequest.src" placeholder="Airport or City">
+      </mat-form-field>
+      <mat-form-field class="field">
+          <mat-label>Choose tour total length in days</mat-label>
+        <input matInput [(ngModel)]="tourRequest.vacationDays" placeholder="example: 21">
+      </mat-form-field>
+      <mat-form-field class="field">
+        <mat-label>Choose a date to start the tour</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="example: 15/7/2018" [value]="date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-card *ngFor="let place of tourRequest.toVisit; let i = index" class="visit-card">
+        <mat-form-field class="field">
+          <mat-label>Choose a place to visit</mat-label>
+          <input matInput [value]="tourRequest.toVisit[i]" placeholder="Airport or City">
+        </mat-form-field>
+      </mat-card>
+      <div class="centered-row">
+        <button mat-mini-fab matTooltip="Add another place to visit!" class="light-button" (click)="addPlace()"><mat-icon>add</mat-icon></button>
+      </div>
+      <button mat-raised-button color="primary" (click)="buscar()">Aplicar</button>
     </mat-card-content>
   </mat-card>
 </div>

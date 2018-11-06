@@ -13,7 +13,6 @@ export class TourRequest {
     constructor() {
         this.src = '';
         this.toVisit = [];
-        this.vacationDays = 7;
         this.startDate = new Date();
         this.filters = {global: [], ontrip: [], oncity: []};
     }

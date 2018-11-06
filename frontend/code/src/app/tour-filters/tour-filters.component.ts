@@ -15,19 +15,26 @@ export class TourFiltersComponent implements OnInit {
   @Output() search: EventEmitter<TourResult> = new EventEmitter<TourResult>();
   tourRequest: TourRequest = new TourRequest();
   date: FormControl;
+
   constructor(
     private tourSolverService: TourSolverService
   ) { }
 
   ngOnInit() {
     this.date = new FormControl(new Date());
+    this.addPlace();
   }
 
   buscar() {
+    console.log(this.date);
     this.tourSolverService.getTourResult(this.tourRequest)
       .pipe(
         tap(tour => console.log(tour))
       )
       .subscribe(tour => this.search.emit(tour));
+  }
+
+  addPlace() {
+    this.tourRequest.toVisit.push('');
   }
 }
