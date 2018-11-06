@@ -1,0 +1,12 @@
+<div class="container">
+  <div *ngIf="tourResult; else empty">
+    <app-tour-trips-list cardTitle="Cheap option" [tour]="tourResult.cheap"></app-tour-trips-list>
+    <app-tour-trips-list cardTitle="Fast option" [tour]="tourResult.fast"></app-tour-trips-list>
+    <app-tour-trips-list cardTitle="Balanced option" [tour]="tourResult.balanced"></app-tour-trips-list>
+  </div>
+  <ng-template #empty>
+    <mat-card>
+      Search some tours!
+    </mat-card>
+  </ng-template>
+</div>

@@ -1,0 +1,12 @@
+<div class="container">
+  <mat-card>
+    <mat-card-title>Filters</mat-card-title>
+    <mat-card-content>
+        <input [(ngModel)]="tourRequest.src" placeholder="Source">
+        <input [(ngModel)]="toVisit" placeholder="To Visit places">
+        <input [(ngModel)]="tourRequest.vacationDays" placeholder="Source">
+        <input placeholder="Date">
+        <button mat-raised-button color="primary" (click)="buscar()">Aplicar</button>
+    </mat-card-content>
+  </mat-card>
+</div>

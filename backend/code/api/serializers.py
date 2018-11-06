@@ -7,6 +7,9 @@ class PortSerializer(serializers.ModelSerializer):
         fields = ('id', 'country', 'city', 'name')
 
 class TripSerializer(serializers.ModelSerializer):
+    fromPort = PortSerializer(read_only=True)
+    toPort = PortSerializer(read_only=True)
+    
     class Meta:
         model = Trip
         fields = ('id', 'fromPort', 'toPort', 'cost', 'currency', 

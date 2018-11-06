@@ -1,0 +1,37 @@
+<div class="container">
+    <mat-card class="card-style">
+      <mat-card-title>{{ cardTitle }}</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="tour.path">
+          <div *ngFor="let trip of tour.path">
+            <li>
+            From {{ trip.fromPort.name }} to {{ trip.toPort.name }}
+              <ul>
+                <li>
+                  Cost: {{ trip.cost }} {{ trip.currency }}
+                </li>
+                <li>
+                  Departure: {{ trip.departure.replace('T', ' ').replace('Z', '') }}
+                </li>
+                <li>
+                  Arrival: {{ trip.arrival.replace('T', ' ').replace('Z', '') }}
+                </li>
+                <li>
+                  Scales: {{ trip.scales }}
+                </li>
+                <li>
+                  Duration: {{ trip.duration }}
+                </li>
+                <li>
+                  Source: {{ trip.sourceURL }}
+                </li>
+              </ul>
+            </li>
+          </div>
+        </div>
+        <div *ngElse>
+          {{ tour.error }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
