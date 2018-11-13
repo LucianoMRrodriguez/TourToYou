@@ -37,4 +37,11 @@ export class OnCityFilter {
     cityName: string;
     daysToStay: number;
     used: boolean;
+
+    constructor(name?: string, cityName?: string, daysToStay?: number) {
+        this.name = name;
+        this.cityName = cityName;
+        this.daysToStay = daysToStay;
+        this.used = false;
+    }
 }
