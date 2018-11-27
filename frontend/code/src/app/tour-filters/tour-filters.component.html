@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-card>
+  <mat-card class="cardContainer">
     <mat-card-title>Filters</mat-card-title>
     <mat-card-content>
       <mat-form-field class="field">
@@ -7,25 +7,25 @@
         <input matInput [(ngModel)]="tourRequest.src" placeholder="Airport or City">
       </mat-form-field>
       <mat-form-field class="field">
-          <mat-label>Choose tour total length in days</mat-label>
+        <mat-label>Choose tour total length in days</mat-label>
         <input matInput [(ngModel)]="tourRequest.vacationDays" placeholder="example: 21">
       </mat-form-field>
       <mat-form-field class="field">
         <mat-label>Choose a date to start the tour</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="example: 15/7/2018" [value]="date">
+        <input matInput [matDatepicker]="picker" placeholder="example: 15/7/2018" [(ngModel)]="tourRequest.startDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      <mat-card *ngFor="let place of tourRequest.toVisit; let i = index" class="visit-card">
+      <mat-card *ngFor="let place of tourRequest.toVisit; let i = index; trackBy:trackByFn" class="visit-card">
         <mat-form-field class="field">
           <mat-label>Choose a place to visit</mat-label>
-          <input matInput [value]="tourRequest.toVisit[i]" placeholder="Airport or City">
+          <input matInput [(ngModel)]="tourRequest.toVisit[i]" placeholder="Airport or City">
         </mat-form-field>
         <div *ngFor="let filter of citiesFilters[i]; let j = index">
           <mat-form-field *ngIf="filter.name === 'Stay in city for at least'" class="field">
             <mat-label>Days to stay at least</mat-label>
-            <input matInput [value]="filter.daysToStay" placeholder="example: 3">
-          </mat-form-field>        
+            <input matInput [(ngModel)]="filter.daysToStay" placeholder="example: 3">
+          </mat-form-field>
         </div>
         <button mat-button [matMenuTriggerFor]="cityFilterMenu">Add city filter...</button>
         <mat-menu #cityFilterMenu="matMenu">
@@ -33,10 +33,59 @@
         </mat-menu>
 
       </mat-card>
+      <mat-menu #cityFilterMenu="matMenu">
+        <button mat-menu-item (click)="addStayAtLeastFilter(i)">Stay at least...</button>
+      </mat-menu>
       <div class="centered-row">
-        <button mat-mini-fab matTooltip="Add another place to visit!" class="light-button" (click)="addPlace()"><mat-icon>add</mat-icon></button>
+        <button mat-mini-fab matTooltip="Add another place to visit!" class="light-button" (click)="addPlace()">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
-      <button mat-raised-button color="primary" (click)="buscar()">Aplicar</button>
+
+      <mat-card *ngFor="let filter of connections" class="margin-bottom-5">
+        <mat-form-field>
+          <mat-select placeholder="From" [(value)]="filter.fromPlace">
+            <mat-option [value]="tourRequest.src">
+              {{tourRequest.src}}
+            </mat-option>
+            <mat-option *ngFor="let place of tourRequest.toVisit" [value]="place">
+              {{place}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="float-right">
+          <mat-select placeholder="To" [(value)]="filter.toCity">
+            <mat-option [value]="tourRequest.src">
+              {{tourRequest.src}}
+            </mat-option>
+            <mat-option *ngFor="let place of tourRequest.toVisit" [value]="place">
+              {{place}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+
+      <mat-card *ngFor="let filter of globalFilters" class="margin-bottom-5">
+        <mat-form-field *ngIf="filter.name === 'Scales'" class="field">
+          <mat-label>Maximum scales</mat-label>
+          <input matInput [(ngModel)]="filter.max" placeholder="example: 0">
+        </mat-form-field>
+        <mat-form-field *ngIf="filter.name === 'Duration'" class="field">
+          <mat-label>Maximum duration</mat-label>
+          <input matInput [(ngModel)]="maxDuration" placeholder="HH:mm:ss example: 10:25:00">
+        </mat-form-field>
+      </mat-card>
+      <button mat-button [matMenuTriggerFor]="globalFilterMenu">Add global filter...</button>
+      <mat-menu #globalFilterMenu="matMenu">
+        <button mat-menu-item (click)="addGlobalFilter('Scales')">Maximum scales...</button>
+        <button mat-menu-item (click)="addGlobalFilter('Duration')">Maximum duration...</button>
+      </mat-menu>
+
+      <button mat-button (click)="addConnection()">Add connection...</button>
+
+      <div class="float-right filterButton">
+        <button mat-raised-button color="primary" (click)="buscar()">Aplicar</button>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

@@ -9,7 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule, MatInputModule } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppComponent } from './app.component';
 import { TourResultComponent } from './tour-result/tour-result.component';
@@ -37,7 +38,8 @@ import { TourTripsListComponent } from './tour-trips-list/tour-trips-list.compon
     MatInputModule,
     MatIconModule,
     MatTooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

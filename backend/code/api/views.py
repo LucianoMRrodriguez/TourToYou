@@ -16,7 +16,7 @@ def best_path(request):
         print(data)
         src = data['src']
         toVisit = data['toVisit']
-        vacationDays = data['vacationDays']
+        vacationDays = int(data['vacationDays'])
         startDate = datetime(2019,1,1)
         filters = data['filters']
         responseData = {

@@ -15,20 +15,31 @@ def calculate_path(strategy, src, toVisitCities, startDate, vacationDays, filter
     if strategy not in POSIBLE_STRATEGIES:
         data['error'] = 'Bad request'
         return  data
+    print(strategy)
     trips = []
     toVisit = toVisitCities[:]
+    for f in filters['oncity']:
+        f['used'] = False
+    for f in filters['ontrip']:
+        f['used'] = False
     try:
         """ Leaving home """
         tripQset = Trip.objects.all(
             ).filter(Q(fromPort__city=src) | Q(fromPort__name=src)
             ).filter(Q(toPort__city__in=toVisit) | Q(toPort__name__in=toVisit)
             ).filter(departure__range=(startDate, startDate + timedelta(days=1)))
+        if filters != None:
+            for f in filters['global']:
+                tripQset = apply_filter(tripQset, f, None, strategy, src, toVisit, startDate, vacationDays)
+            for f in filters['ontrip']:
+                tripQset = apply_filter(tripQset, f, None, strategy, src, toVisit, startDate, vacationDays)
         trip = _getOrderBy(tripQset, strategy)
         trips.append(trip)
         if trip.toPort.city in toVisit: toVisit.remove(trip.toPort.city)
         if trip.toPort.name in toVisit: toVisit.remove(trip.toPort.name)
         lastTrip = trip
-
+        print(lastTrip.fromPort.city)
+        print(lastTrip.toPort.city)
         """ Visiting """
         while len(toVisit) > 0:
             tripQset = Trip.objects.all(
@@ -36,23 +47,35 @@ def calculate_path(strategy, src, toVisitCities, startDate, vacationDays, filter
                 ).filter(Q(toPort__city__in=toVisit) | Q(toPort__name__in=toVisit)
                 ).filter(departure__gte=lastTrip.arrival
                 ).filter(arrival__lte=startDate + timedelta(days=vacationDays-len(toVisit)))
-            for f in filters['oncity']:
-                tripQset = apply_filter(tripQset, f, lastTrip, strategy, src, toVisit, startDate, vacationDays)
+            if filters != None:
+                for f in filters['oncity']:
+                    tripQset = apply_filter(tripQset, f, lastTrip, strategy, src, toVisit, startDate, vacationDays)
+                for f in filters['global']:
+                    tripQset = apply_filter(tripQset, f, lastTrip, strategy, src, toVisit, startDate, vacationDays)
+                for f in filters['ontrip']:
+                    tripQset = apply_filter(tripQset, f, lastTrip, strategy, src, toVisit, startDate, vacationDays)
             trip = _getOrderBy(tripQset, strategy)
             trips.append(trip)
             if trip.toPort.city in toVisit: toVisit.remove(trip.toPort.city)
             if trip.toPort.name in toVisit: toVisit.remove(trip.toPort.name)
             lastTrip = trip
-        
+            print(lastTrip.fromPort.city)
+            print(lastTrip.toPort.city)
         """ Going back home """
         tripQset = Trip.objects.all(
             ).filter(fromPort__city=lastTrip.toPort.city
             ).filter(Q(toPort__city=src) | Q(toPort__name=src) 
             ).filter(departure__gt=lastTrip.arrival
             ).filter(arrival__lt=startDate + timedelta(days=vacationDays))
+        if filters != None:
+            for f in filters['global']:
+                tripQset = apply_filter(tripQset, f, lastTrip, strategy, src, toVisit, startDate, vacationDays)
+            for f in filters['ontrip']:
+                tripQset = apply_filter(tripQset, f, None, strategy, src, toVisit, startDate, vacationDays)
         trip = _getOrderBy(tripQset, strategy)
         trips.append(trip)
-
+        print(lastTrip.fromPort.city)
+        print(lastTrip.toPort.city)
         """ Final calculations """
         serializer = TripSerializer(trips, many=True)
         totalCost = 0
@@ -64,7 +87,8 @@ def calculate_path(strategy, src, toVisitCities, startDate, vacationDays, filter
             totalDuration += trip.duration
         data['totalDuration'] = str(totalDuration)
         data['path']=serializer.data
-    except Exception:
+    except Exception as err:
+        print(err)
         data['error'] = 'Path not found'
         pass
     return data

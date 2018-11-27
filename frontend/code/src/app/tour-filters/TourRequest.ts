@@ -20,16 +20,28 @@ export class TourRequest {
 
 export class GlobalFilter {
     name: string;
-    cityName: string;
-    daysToStay: number;
-    used: boolean;
+    max: number;
+
+    constructor(name?: string, max?: number) {
+        this.name = name;
+        this.max = max;
+    }
 }
 
 export class OnTripFilter {
     name: string;
-    cityName: string;
-    daysToStay: number;
+    fromPlace: string;
+    toPort: string;
+    toCity: string;
     used: boolean;
+
+    constructor(name?: string, fromPlace?: string, toPort?:string, toCity?:string) {
+        this.name = name;
+        this.fromPlace = fromPlace;
+        this.toPort = toPort;
+        this.toCity = toCity;
+        this.used = false;
+    }
 }
 
 export class OnCityFilter {

@@ -1,37 +1,50 @@
 <div class="container">
-    <mat-card class="card-style">
-      <mat-card-title>{{ cardTitle }}</mat-card-title>
-      <mat-card-content>
-        <div *ngIf="tour.path">
-          <div *ngFor="let trip of tour.path">
-            <li>
-            From {{ trip.fromPort.name }} to {{ trip.toPort.name }}
-              <ul>
-                <li>
-                  Cost: {{ trip.cost }} {{ trip.currency }}
-                </li>
-                <li>
-                  Departure: {{ trip.departure.replace('T', ' ').replace('Z', '') }}
-                </li>
-                <li>
-                  Arrival: {{ trip.arrival.replace('T', ' ').replace('Z', '') }}
-                </li>
-                <li>
-                  Scales: {{ trip.scales }}
-                </li>
-                <li>
-                  Duration: {{ trip.duration }}
-                </li>
-                <li>
-                  Source: {{ trip.sourceURL }}
-                </li>
-              </ul>
-            </li>
+  <mat-card class="card-style">
+    <mat-card-title>
+      <span class="cardTitle">{{ cardTitle }}</span>
+      <br>
+      <div class="total">
+        <span><b>Costo total:</b></span> {{tour.totalCost}}
+      </div>
+      <br>
+      <div class="total">
+        <span><b>Tiempo total:</b></span> {{tour.totalDuration}}
+      </div>
+    </mat-card-title>
+    <mat-card-content>
+      <div *ngIf="tour.path" class="tourPath">
+        <div *ngFor="let trip of tour.path" class="pathContainer">
+          <div class="pathFromTo">
+            From <b>{{ trip.fromPort.name }}</b> to <b>{{ trip.toPort.name }}</b>
+          </div>
+          <div class="pathDetail">
+            <div class="tripAndTime">
+              <div class="timeAndScales">
+              <div class="time">
+                {{ trip.departure.replace('T', ' ').replace('Z', '') }}
+              </div>
+              <div class="scales">
+                Scales: {{ trip.scales }}
+              </div>
+              <div class="time">
+                {{ trip.arrival.replace('T', ' ').replace('Z', '') }}
+              </div>
+            </div> 
+            <div class="duration">             
+              Duration: {{ trip.duration }}
+            </div>
+            </div>
+            <div class="costAndSource">
+              Cost: {{ trip.cost }} {{ trip.currency }}
+              <br>
+              Source: {{ trip.sourceURL }}
+            </div>
           </div>
         </div>
-        <div *ngElse>
-          {{ tour.error }}
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      </div>
+      <div *ngElse>
+        {{ tour.error }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
